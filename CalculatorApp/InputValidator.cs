@@ -1,5 +1,7 @@
+// Copyright (c) 2023 Sage software, Inc. - All rights reserves.
 public class InputValidator
 {
+    //Another
     public static bool TryGetNumber(string prompt, out double number)
     {
         Console.Write(prompt);
