@@ -1,5 +1,7 @@
+// Copyright (c) 2023 Sage software, Inc. - All rights reserves.
 public class Calculator
 {
+    //Another
     private readonly Dictionary<string, Func<double, double, double>> _operations;
 
     public Calculator()
