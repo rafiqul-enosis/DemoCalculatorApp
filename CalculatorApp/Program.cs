@@ -1,5 +1,4 @@
-﻿// Copyright (c) 2023 Sage software, Inc. - All rights reserves.
-var calculator = new Calculator();
+﻿var calculator = new Calculator();
 
 void RunCalculator()
 {
