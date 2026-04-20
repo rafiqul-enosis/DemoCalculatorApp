@@ -3,31 +3,35 @@ namespace CalculatorApp.Tests;
 public class InputValidatorTest
 {
     [Fact]
-    public void GetOperator_ReturnsOperatorAsIs_WithoutTrimming()
+    public void StringToOperator_ValidOperators_ConvertsSuccessfully()
     {
-        string operatorWithSpaces = " + ";
-        var calculator = new Calculator();
-        
-        Assert.False(calculator.IsValidOperator(operatorWithSpaces));
-        Assert.True(calculator.IsValidOperator(operatorWithSpaces.Trim()));
+        Assert.True(InputValidator.StringToOperator("+", out Operator op));
+        Assert.Equal(Operator.Add, op);
     }
 
     [Fact]
-    public void Calculate_WithOperatorContainingWhitespace_ShouldTrimAndWork()
+    public void StringToOperator_InvalidOperators_ReturnsFalse()
+    {
+        Assert.False(InputValidator.StringToOperator("^", out _));
+        Assert.False(InputValidator.StringToOperator("&", out _));
+    }
+
+    [Fact]
+    public void Calculate_WithOperatorEnum_ReturnsCorrectResult()
     {
         var calculator = new Calculator();
         
-        double result = calculator.Calculate(10, " + ", 5);
+        double result = calculator.Calculate(10, Operator.Add, 5);
         Assert.Equal(15, result);
     }
 
     [Fact]
-    public void Calculate_WithSpacedOperator_ShouldTrimAndExecute()
+    public void OperatorToString_ConvertsEnumToSymbol()
     {
-        var calculator = new Calculator();
-        
-        double result = calculator.Calculate(20, " / ", 4);
-        Assert.Equal(5, result);
+        Assert.Equal("+", InputValidator.OperatorToString(Operator.Add));
+        Assert.Equal("-", InputValidator.OperatorToString(Operator.Subtract));
+        Assert.Equal("*", InputValidator.OperatorToString(Operator.Multiply));
+        Assert.Equal("/", InputValidator.OperatorToString(Operator.Divide));
+        Assert.Equal("%", InputValidator.OperatorToString(Operator.Modulus));
     }
 }
-

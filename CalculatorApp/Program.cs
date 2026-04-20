@@ -1,4 +1,7 @@
-﻿var calculator = new Calculator();
+﻿using CalculatorApp;
+
+var calculator = new Calculator();
+var stringManager = new StringResourceManager(Path.Combine(AppContext.BaseDirectory, "appstrings.json"));
 
 void RunCalculator()
 {
@@ -8,28 +11,33 @@ void RunCalculator()
     {
         try
         {
-            if (!InputValidator.TryGetNumber("Enter first number: ", out double num1))
+            if (!InputValidator.TryGetNumber(stringManager.GetPrompt("enterFirstNumber"), out double num1))
             {
-                Console.WriteLine("Invalid input. Please enter a valid number.\n");
+                Console.WriteLine(stringManager.GetMessage("invalidInput"));
                 continue;
             }
 
-            string operatorInput = InputValidator.GetOperator();
-
-            if (!InputValidator.TryGetNumber("Enter second number: ", out double num2))
+            if (!InputValidator.TryGetOperator(out Operator operatorEnum))
             {
-                Console.WriteLine("Invalid input. Please enter a valid number.\n");
+                Console.WriteLine(stringManager.GetMessage("invalidOperator"));
                 continue;
             }
 
-            if (calculator.IsValidOperator(operatorInput))
+            if (!InputValidator.TryGetNumber(stringManager.GetPrompt("enterSecondNumber"), out double num2))
             {
-                double result = calculator.Calculate(num1, operatorInput, num2);
-                Console.WriteLine($"Result: {num1} {operatorInput} {num2} = {result}");
+                Console.WriteLine(stringManager.GetMessage("invalidInput"));
+                continue;
+            }
+
+            if (calculator.IsValidOperator(operatorEnum))
+            {
+                double result = calculator.Calculate(num1, operatorEnum, num2);
+                string operatorSymbol = InputValidator.OperatorToString(operatorEnum);
+                Console.WriteLine($"{stringManager.GetMessage("result")}{num1} {operatorSymbol} {num2} = {result}");
             }
             else
             {
-                Console.WriteLine("Invalid operator. Please use +, -, *, /, or %\n");
+                Console.WriteLine(stringManager.GetMessage("invalidOperator"));
                 continue;
             }
 
@@ -39,17 +47,18 @@ void RunCalculator()
                 Console.WriteLine();
             }
         }
-        catch (DivideByZeroException ex)
+        catch (DivideByZeroException)
         {
-            Console.WriteLine($"Error: {ex.Message}\n");
+            Console.WriteLine($"{stringManager.GetMessage("divideByZeroError")}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}\n");
+            Console.WriteLine($"{stringManager.GetMessage("unexpectedError")}{ex.Message}\n");
         }
     }
 
-    Console.WriteLine("Thank you for using the calculator. Goodbye!");
+    Console.WriteLine(stringManager.GetMessage("goodbye"));
 }
 
 RunCalculator();
+
